@@ -2,8 +2,8 @@ package hyperliquid
 
 import (
 	"context"
-	"crypto/ecdsa"
 	"encoding/json"
+	"errors"
 	"sync/atomic"
 	"time"
 )
@@ -11,7 +11,7 @@ import (
 type Exchange struct {
 	debug        bool
 	client       *client
-	privateKey   *ecdsa.PrivateKey
+	signer       Signer
 	vault        string
 	accountAddr  string
 	dex          string
@@ -25,7 +25,7 @@ type Exchange struct {
 
 func NewExchange(
 	ctx context.Context,
-	privateKey *ecdsa.PrivateKey,
+	signer Signer,
 	baseURL string,
 	meta *Meta,
 	vaultAddr, accountAddr string,
@@ -33,7 +33,7 @@ func NewExchange(
 	opts ...ExchangeOpt,
 ) *Exchange {
 	ex := &Exchange{
-		privateKey:  privateKey,
+		signer:      signer,
 		vault:       vaultAddr,
 		accountAddr: accountAddr,
 	}
@@ -100,7 +100,8 @@ func (e *Exchange) executeAction(ctx context.Context, action, result any) error 
 	nonce := e.nextNonce()
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -126,13 +127,17 @@ func (e *Exchange) executeAction(ctx context.Context, action, result any) error 
 func (e *Exchange) postAction(
 	ctx context.Context,
 	action any,
-	signature SignatureResult,
+	signature *SignatureResult,
 	nonce int64,
 ) ([]byte, error) {
+	if signature == nil {
+		return nil, errors.New("signature is nil")
+	}
+
 	payload := map[string]any{
 		"action":    action,
 		"nonce":     nonce,
-		"signature": signature,
+		"signature": *signature,
 	}
 
 	if e.vault != "" {

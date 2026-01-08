@@ -37,7 +37,7 @@ func newExchange(key, url string) (*Exchange, error) {
 
 	exchange := NewExchange(
 		context.TODO(),
-		privateKey,
+		NewSignerPrimitive(privateKey),
 		url,
 		nil, // Meta will be fetched automatically
 		"",

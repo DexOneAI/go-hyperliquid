@@ -124,7 +124,8 @@ func (e *Exchange) ScheduleCancel(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -157,7 +158,8 @@ func (e *Exchange) SetReferrer(ctx context.Context, code string) (*SetReferrerRe
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		"", // No vault address for referrer
 		nonce,
@@ -193,7 +195,8 @@ func (e *Exchange) CreateSubAccount(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		"", // No vault address for sub-account creation
 		nonce,
@@ -244,7 +247,8 @@ func (e *Exchange) UsdClassTransfer(
 	}
 
 	sig, err := SignUserSignedAction(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		payloadTypes,
 		"HyperliquidTransaction:UsdClassTransfer",
@@ -283,7 +287,8 @@ func (e *Exchange) SubAccountTransfer(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		"", // No vault address
 		nonce,
@@ -323,7 +328,8 @@ func (e *Exchange) VaultUsdTransfer(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		"", // No vault address
 		nonce,
@@ -363,7 +369,8 @@ func (e *Exchange) CreateVault(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		"", // No vault address
 		nonce,
@@ -402,7 +409,8 @@ func (e *Exchange) VaultModify(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		"", // No vault address
 		nonce,
@@ -439,7 +447,8 @@ func (e *Exchange) VaultDistribute(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		"", // No vault address
 		nonce,
@@ -485,7 +494,8 @@ func (e *Exchange) UsdTransfer(
 	}
 
 	sig, err := SignUserSignedAction(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		payloadTypes,
 		"HyperliquidTransaction:UsdSend",
@@ -532,7 +542,8 @@ func (e *Exchange) SpotTransfer(
 	}
 
 	sig, err := SignUserSignedAction(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		payloadTypes,
 		"HyperliquidTransaction:SpotSend",
@@ -564,7 +575,8 @@ func (e *Exchange) UseBigBlocks(ctx context.Context, enable bool) (*ApprovalResp
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		"", // No vault address
 		nonce,
@@ -605,7 +617,8 @@ func (e *Exchange) PerpDexClassTransfer(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -647,7 +660,8 @@ func (e *Exchange) SubAccountSpotTransfer(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -688,7 +702,8 @@ func (e *Exchange) TokenDelegate(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -734,7 +749,8 @@ func (e *Exchange) WithdrawFromBridge(
 	}
 
 	sig, err := SignUserSignedAction(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		payloadTypes,
 		"HyperliquidTransaction:Withdraw",
@@ -784,7 +800,8 @@ func (e *Exchange) ApproveAgent(
 
 	// Use SignAgent which does EIP-712 signing (not L1Action)
 	sig, err := SignAgent(
-		e.privateKey,
+		ctx,
+		e.signer,
 		agentAddress,
 		agentName,
 		nonce,
@@ -845,7 +862,8 @@ func (e *Exchange) ApproveBuilderFee(
 	}
 
 	sig, err := SignUserSignedAction(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		payloadTypes,
 		"HyperliquidTransaction:ApproveBuilderFee",
@@ -895,7 +913,8 @@ func (e *Exchange) ConvertToMultiSigUser(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -945,7 +964,8 @@ func (e *Exchange) SpotDeployRegisterToken(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		"", // No vault address for spot deploy
 		nonce,
@@ -981,7 +1001,8 @@ func (e *Exchange) SpotDeployUserGenesis(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1015,7 +1036,8 @@ func (e *Exchange) SpotDeployEnableFreezePrivilege(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1051,7 +1073,8 @@ func (e *Exchange) SpotDeployFreezeUser(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1085,7 +1108,8 @@ func (e *Exchange) SpotDeployRevokeFreezePrivilege(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1123,7 +1147,8 @@ func (e *Exchange) SpotDeployGenesis(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1161,7 +1186,8 @@ func (e *Exchange) SpotDeployRegisterSpot(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1199,7 +1225,8 @@ func (e *Exchange) SpotDeployRegisterHyperliquidity(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1235,7 +1262,8 @@ func (e *Exchange) SpotDeploySetDeployerTradingFeeShare(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1309,7 +1337,8 @@ func (e *Exchange) PerpDeployRegisterAsset(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1349,7 +1378,8 @@ func (e *Exchange) PerpDeployHaltTrading(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1429,7 +1459,8 @@ func (e *Exchange) PerpDeploySetOracle(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1463,7 +1494,8 @@ func (e *Exchange) CSignerUnjailSelf(ctx context.Context) (*ValidatorResponse, e
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1495,7 +1527,8 @@ func (e *Exchange) CSignerJailSelf(ctx context.Context) (*ValidatorResponse, err
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1531,7 +1564,8 @@ func (e *Exchange) CSignerInner(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1569,7 +1603,8 @@ func (e *Exchange) CValidatorRegister(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1605,7 +1640,8 @@ func (e *Exchange) CValidatorChangeProfile(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1637,7 +1673,8 @@ func (e *Exchange) CValidatorUnregister(ctx context.Context) (*ValidatorResponse
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		action,
 		e.vault,
 		nonce,
@@ -1676,7 +1713,8 @@ func (e *Exchange) MultiSig(
 	}
 
 	sig, err := SignL1Action(
-		e.privateKey,
+		ctx,
+		e.signer,
 		multiSigAction,
 		e.vault,
 		nonce,
