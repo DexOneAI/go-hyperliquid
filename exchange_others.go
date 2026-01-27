@@ -820,7 +820,7 @@ func (e *Exchange) ApproveAgent(
 
 	action := ApproveAgentAction{
 		Type:             "approveAgent",
-		SignatureChainId: "0x66eee",
+		SignatureChainId: "0xa4b1",
 		HyperliquidChain: hyperliquidChain,
 		AgentAddress:     agentAddress,
 		AgentName:        name,

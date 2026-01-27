@@ -709,7 +709,7 @@ func (i *Info) QueryOrderByCloid(
 	return &result, nil
 }
 
-func (i *Info) QueryReferralState(ctx context.Context, user string) (*ReferralState, error) {
+func (i *Info) QueryReferralState(ctx context.Context, user string) (*ReferralStateZ, error) {
 	resp, err := i.client.post(ctx, "/info", map[string]any{
 		"type": "referral",
 		"user": user,
@@ -718,7 +718,7 @@ func (i *Info) QueryReferralState(ctx context.Context, user string) (*ReferralSt
 		return nil, fmt.Errorf("failed to fetch referral state: %w", err)
 	}
 
-	var result ReferralState
+	var result ReferralStateZ
 	if err := json.Unmarshal(resp, &result); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal referral state: %w", err)
 	}

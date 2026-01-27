@@ -64,15 +64,16 @@ func NewSignerPrimitive(privateKey *ecdsa.PrivateKey) Signer {
 }
 
 type signerImpl struct {
-	address string
-	signer  signer.Interface
+	address common.Address
+	signer  signer.InterfaceV2
 }
 
 func (s *signerImpl) SignTypedData(ctx context.Context, typedData apitypes.TypedData) (*SignatureResult, error) {
-	ret, err := s.signer.SignTypedData(
+	ret, err := s.signer.TypedData(
 		ctx,
 		uuid.NewString(),
 		s.address,
+		"hyperliquid",
 		typedData,
 	)
 	if err != nil {
@@ -86,7 +87,7 @@ func (s *signerImpl) SignTypedData(ctx context.Context, typedData apitypes.Typed
 }
 
 type signerMasterImpl struct {
-	signer signer.Interface
+	signer signer.InterfaceV2
 }
 
 func (m signerMasterImpl) CreateSigner(_ context.Context, address string) Signer {
@@ -94,12 +95,12 @@ func (m signerMasterImpl) CreateSigner(_ context.Context, address string) Signer
 		return nil
 	}
 	return &signerImpl{
-		address: address,
+		address: common.HexToAddress(address),
 		signer:  m.signer,
 	}
 }
 
-func NewSignerMaster(signer signer.Interface) SignerMaster {
+func NewSignerMaster(signer signer.InterfaceV2) SignerMaster {
 	return &signerMasterImpl{
 		signer: signer,
 	}

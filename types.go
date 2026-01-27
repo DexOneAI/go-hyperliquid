@@ -479,6 +479,30 @@ type ReferralState struct {
 	Referred     []string `json:"referred"`
 }
 
+type ReferralStateZ struct {
+	ReferredBy *struct {
+		Referrer string `json:"referrer"`
+		Code     string `json:"code"`
+	} `json:"referredBy"`
+	CumVlm           string `json:"cumVlm"`
+	UnclaimedRewards string `json:"unclaimedRewards"`
+	ClaimedRewards   string `json:"claimedRewards"`
+	BuilderRewards   string `json:"builderRewards"`
+	ReferrerState    struct {
+		Stage string `json:"stage"`
+		Data  struct {
+			Code           string `json:"code"`
+			ReferralStates []struct {
+				CumVlm                       string `json:"cumVlm"`
+				CumRewardedFeesSinceReferred string `json:"cumRewardedFeesSinceReferred"`
+				CumFeesRewardedToReferrer    string `json:"cumFeesRewardedToReferrer"`
+				TimeJoined                   int64  `json:"timeJoined"`
+				User                         string `json:"user"`
+			} `json:"referralStates"`
+		} `json:"data"`
+	} `json:"referrerState"`
+}
+
 type SubAccount struct {
 	Name        string   `json:"name"`
 	User        string   `json:"user"`

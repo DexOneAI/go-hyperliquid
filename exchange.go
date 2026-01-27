@@ -53,6 +53,34 @@ func NewExchange(
 	return ex
 }
 
+func NewExchangeWithInfo(
+	ctx context.Context,
+	signer Signer,
+	baseURL string,
+	vaultAddr, accountAddr string,
+	info *Info,
+	opts ...ExchangeOpt,
+) *Exchange {
+	ex := &Exchange{
+		signer:      signer,
+		vault:       vaultAddr,
+		accountAddr: accountAddr,
+		info:        info,
+	}
+
+	for _, opt := range opts {
+		opt.Apply(ex)
+	}
+
+	if ex.debug {
+		ex.clientOpts = append(ex.clientOpts, clientOptDebugMode())
+	}
+
+	ex.client = newClient(baseURL, ex.clientOpts...)
+
+	return ex
+}
+
 // nextNonce returns either the current timestamp in milliseconds or incremented by one to prevent duplicates
 // Nonces must be within (T - 2 days, T + 1 day), where T is the unix millisecond timestamp on the block of the transaction.
 // See https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/nonces-and-api-wallets#hyperliquid-nonces
