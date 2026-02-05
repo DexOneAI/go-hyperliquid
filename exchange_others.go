@@ -63,6 +63,28 @@ func (e *Exchange) UpdateIsolatedMargin(
 	return &result, nil
 }
 
+func (e *Exchange) TopUpIsolatedOnlyMargin(
+	ctx context.Context,
+	name, leverage string,
+) (*UserState, error) {
+	asset, ok := e.info.CoinToAsset(name)
+	if !ok {
+		return nil, fmt.Errorf("coin %s not found in info", name)
+	}
+
+	action := TopUpIsolatedOnlyMarginAction{
+		Type:     "topUpIsolatedOnlyMargin",
+		Asset:    asset,
+		Leverage: leverage,
+	}
+
+	var result UserState
+	if err := e.executeAction(ctx, action, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
 // SlippagePrice calculates the slippage price for market orders
 func (e *Exchange) SlippagePrice(
 	ctx context.Context,

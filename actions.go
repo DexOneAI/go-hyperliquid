@@ -114,6 +114,12 @@ type UpdateIsolatedMarginAction struct {
 	Ntli  float64 `json:"ntli"  msgpack:"ntli"`
 }
 
+type TopUpIsolatedOnlyMarginAction struct {
+	Type     string `json:"type"        msgpack:"type"`
+	Asset    int    `json:"asset"      msgpack:"asset"`
+	Leverage string `json:"leverage" msgpack:"leverage"`
+}
+
 // OrderWire represents the wire format for orders with deterministic field ordering
 // CRITICAL: Field order MUST exactly match Python SDK insertion order: a, b, p, s, r, t, c
 // See hyperliquid-python-sdk/hyperliquid/utils/signing.py:order_request_to_order_wire
