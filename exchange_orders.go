@@ -34,9 +34,10 @@ type OrderStatusFilled struct {
 }
 
 type OrderStatus struct {
-	Resting *OrderStatusResting `json:"resting,omitempty"`
-	Filled  *OrderStatusFilled  `json:"filled,omitempty"`
-	Error   *string             `json:"error,omitempty"`
+	Resting           *OrderStatusResting `json:"resting,omitempty"`
+	Filled            *OrderStatusFilled  `json:"filled,omitempty"`
+	Error             *string             `json:"error,omitempty"`
+	WaitingForTrigger bool                `json:"waiting_for_trigger"`
 }
 
 func (s *OrderStatus) String() string {
@@ -46,6 +47,10 @@ func (s *OrderStatus) String() string {
 
 type OrderResponse struct {
 	Statuses []OrderStatus
+}
+
+type OrderResponseMixed struct {
+	Statuses []MixedValue
 }
 
 func newOrderTypeWire(o CreateOrderRequest) OrderWireType {
@@ -166,21 +171,40 @@ func (e *Exchange) BulkOrders(
 	if err != nil {
 		return nil, err
 	}
-	err = e.executeAction(ctx, action, &result)
+
+	var mixedResult *APIResponse[OrderResponseMixed]
+	err = e.executeAction(ctx, action, &mixedResult)
 	if err != nil {
 		return nil, err
 	}
 
-	if result != nil {
+	statuses := make([]OrderStatus, 0, len(mixedResult.Data.Statuses))
+	if mixedResult != nil {
 		// check if any of the statuses has an error set
-		for _, s := range result.Data.Statuses {
-			if s.Error != nil {
-				return result, fmt.Errorf("%s", *s.Error)
+		for _, s := range mixedResult.Data.Statuses {
+			switch {
+			case s.Type() == "string" && s.MustString() == "waitingForTrigger":
+				statuses = append(statuses, OrderStatus{WaitingForTrigger: true})
+			case s.Type() == "object":
+				var status OrderStatus
+				if err = s.Parse(&status); err != nil {
+					return nil, err
+				}
+				if status.Error != nil {
+					return result, fmt.Errorf("%s", *status.Error)
+				}
+				statuses = append(statuses, status)
 			}
 		}
 	}
 
-	return
+	return &APIResponse[OrderResponse]{
+		Status: mixedResult.Status,
+		Data:   OrderResponse{Statuses: statuses},
+		Type:   mixedResult.Type,
+		Err:    mixedResult.Err,
+		Ok:     mixedResult.Ok,
+	}, nil
 }
 
 // ModifyOrderRequest identifies an order by either exchange-provided Oid or client-provided Cloid.

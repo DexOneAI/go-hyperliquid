@@ -56,8 +56,6 @@ func (r *APIResponse[T]) UnmarshalJSON(data []byte) error {
 
 	b := responseData.MarshalTo(nil)
 
-	fmt.Println(string(b))
-
 	// Use fastjson's built-in unmarshaling if possible, fallback to json.Unmarshal
 	if err := json.Unmarshal(b, &r.Data); err != nil {
 		return fmt.Errorf("failed to unmarshal response data: %w", err)
@@ -109,6 +107,14 @@ func (mv *MixedValue) String() (string, bool) {
 		return "", false
 	}
 	return s, true
+}
+
+func (mv *MixedValue) MustString() string {
+	var s string
+	if err := json.Unmarshal(*mv, &s); err != nil {
+		panic(err)
+	}
+	return s
 }
 
 func (mv *MixedValue) Object() (map[string]any, bool) {
