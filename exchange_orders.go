@@ -364,7 +364,7 @@ func (e *Exchange) MarketOpen(
 		Limit: &LimitOrderType{Tif: TifIoc},
 	}
 
-	return e.Order(ctx, CreateOrderRequest{
+	return e.Order(ctx, GroupingNA, CreateOrderRequest{
 		Coin:          name,
 		IsBuy:         isBuy,
 		Size:          sz,
@@ -420,7 +420,7 @@ func (e *Exchange) MarketClose(
 			Limit: &LimitOrderType{Tif: TifIoc},
 		}
 
-		return e.Order(ctx, CreateOrderRequest{
+		return e.Order(ctx, GroupingNA, CreateOrderRequest{
 			Coin:          coin,
 			IsBuy:         isBuy,
 			Size:          size,
