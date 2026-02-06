@@ -56,6 +56,8 @@ func (r *APIResponse[T]) UnmarshalJSON(data []byte) error {
 
 	b := responseData.MarshalTo(nil)
 
+	fmt.Println(string(b))
+
 	// Use fastjson's built-in unmarshaling if possible, fallback to json.Unmarshal
 	if err := json.Unmarshal(b, &r.Data); err != nil {
 		return fmt.Errorf("failed to unmarshal response data: %w", err)
