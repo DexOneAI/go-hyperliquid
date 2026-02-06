@@ -78,9 +78,13 @@ func newOrderTypeWire(o CreateOrderRequest) OrderWireType {
 
 func newCreateOrderAction(
 	e *Exchange,
+	grouping Grouping,
 	orders []CreateOrderRequest,
 	info *BuilderInfo,
 ) (OrderAction, error) {
+	if grouping == "" {
+		grouping = GroupingNA
+	}
 	orderRequests := make([]OrderWire, len(orders))
 	for i, order := range orders {
 		priceWire, err := floatToWire(order.Price)
@@ -120,7 +124,7 @@ func newCreateOrderAction(
 	res := OrderAction{
 		Type:     "order",
 		Orders:   orderRequests,
-		Grouping: string(GroupingNA),
+		Grouping: string(grouping),
 		Builder:  info,
 	}
 
@@ -129,10 +133,11 @@ func newCreateOrderAction(
 
 func (e *Exchange) Order(
 	ctx context.Context,
+	grouping Grouping,
 	req CreateOrderRequest,
 	builder *BuilderInfo,
 ) (result OrderStatus, err error) {
-	resp, err := e.BulkOrders(ctx, []CreateOrderRequest{req}, builder)
+	resp, err := e.BulkOrders(ctx, grouping, []CreateOrderRequest{req}, builder)
 	if err != nil {
 		return
 	}
@@ -153,10 +158,11 @@ func (e *Exchange) Order(
 
 func (e *Exchange) BulkOrders(
 	ctx context.Context,
+	grouping Grouping,
 	orders []CreateOrderRequest,
 	builder *BuilderInfo,
 ) (result *APIResponse[OrderResponse], err error) {
-	action, err := newCreateOrderAction(e, orders, builder)
+	action, err := newCreateOrderAction(e, grouping, orders, builder)
 	if err != nil {
 		return nil, err
 	}
