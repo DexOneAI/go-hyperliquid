@@ -47,6 +47,10 @@ func (r *APIResponse[T]) UnmarshalJSON(data []byte) error {
 	// When status is "ok", "response" contains "type" and "data"
 	r.Type = string(parsed.GetStringBytes("response", "type"))
 
+	if r.Type == "default" {
+		return nil
+	}
+
 	// GetStringBytes() only works on string, we should do a Get instead
 	responseData := parsed.Get("response", "data")
 

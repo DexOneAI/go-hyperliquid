@@ -46,6 +46,10 @@ func (e *Exchange) UpdateLeverage(
 		return errors.New(result.Err)
 	}
 
+	if result.Type == "default" {
+		return nil
+	}
+
 	if result.Data.Status != "success" {
 		return fmt.Errorf("failed to update coin %s leverage", name)
 	}
@@ -79,6 +83,10 @@ func (e *Exchange) UpdateIsolatedMargin(
 		return errors.New(result.Err)
 	}
 
+	if result.Type == "default" {
+		return nil
+	}
+
 	if result.Data.Status != "success" {
 		return fmt.Errorf("failed to isolated coin %s margin", name)
 	}
@@ -108,6 +116,10 @@ func (e *Exchange) TopUpIsolatedOnlyMargin(
 
 	if result.Err != "" {
 		return errors.New(result.Err)
+	}
+
+	if result.Type == "default" {
+		return nil
 	}
 
 	if result.Data.Status != "success" {
