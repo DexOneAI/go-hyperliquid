@@ -838,7 +838,7 @@ func easyjsonB97b45a3EncodeGithubComSoniricoGoHyperliquid8(out *jwriter.Writer, 
 	{
 		const prefix string = ",\"ntli\":"
 		out.RawString(prefix)
-		out.Float64(float64(in.Ntli))
+		out.Uint64(in.Ntli)
 	}
 	out.RawByte('}')
 }

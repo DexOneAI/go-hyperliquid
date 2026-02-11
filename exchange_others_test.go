@@ -2,6 +2,9 @@ package hyperliquid
 
 import (
 	"context"
+	"dexone/pkg/format"
+	"encoding/json"
+	"math/big"
 	"testing"
 
 	"github.com/sonirico/vago/ent"
@@ -50,5 +53,21 @@ func TestPerpDeployHaltTrading(t *testing.T) {
 
 		require.Equal(t, "err", res.Status)
 		require.NotEmpty(t, res.Response)
+	})
+
+	t.Run("UpdateIsolatedMarginActionAction", func(t *testing.T) {
+		u64 := format.FromReadableAmountRat(new(big.Rat).SetFloat64(1000), format.Decimals6)
+
+		action := UpdateIsolatedMarginAction{
+			Type:  "updateIsolatedMargin",
+			Asset: 5,
+			IsBuy: u64.Uint64() > 0,
+			Ntli:  absUint64(u64.Uint64()),
+		}
+
+		data, _ := json.Marshal(map[string]any{
+			"action": action,
+		})
+		t.Log(string(data))
 	})
 }
