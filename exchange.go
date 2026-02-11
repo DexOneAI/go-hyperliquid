@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"sync/atomic"
 	"time"
 )
@@ -143,11 +142,8 @@ func (e *Exchange) executeAction(ctx context.Context, action, result any) error 
 
 	resp, err := e.postAction(ctx, action, sig, nonce)
 	if err != nil {
-		fmt.Println("post action err:", err)
 		return err
 	}
-
-	fmt.Printf("action=%s result=%s\n", action, resp)
 
 	if err := json.Unmarshal(resp, result); err != nil {
 		return err
@@ -194,11 +190,11 @@ func (e *Exchange) postAction(
 
 	// Debug logging
 	if e.debug {
-		//if jsonPayload, err := json.MarshalIndent(payload, "", "  "); err == nil {
-		//	println("=== OUTGOING EXCHANGE PAYLOAD ===")
-		//	println(string(jsonPayload))
-		//	println("=================================")
-		//}
+		if jsonPayload, err := json.MarshalIndent(payload, "", "  "); err == nil {
+			println("=== OUTGOING EXCHANGE PAYLOAD ===")
+			println(string(jsonPayload))
+			println("=================================")
+		}
 	}
 
 	return e.client.post(ctx, "/exchange", payload)
