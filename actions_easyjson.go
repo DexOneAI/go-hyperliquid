@@ -804,7 +804,7 @@ func easyjsonB97b45a3DecodeGithubComSoniricoGoHyperliquid8(in *jlexer.Lexer, out
 			if in.IsNull() {
 				in.Skip()
 			} else {
-				out.Ntli = float64(in.Float64())
+				out.Ntli = in.Uint64()
 			}
 		default:
 			in.SkipRecursive()
