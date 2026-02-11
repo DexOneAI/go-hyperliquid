@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"sync/atomic"
 	"time"
 )
@@ -144,6 +145,8 @@ func (e *Exchange) executeAction(ctx context.Context, action, result any) error 
 	if err != nil {
 		return err
 	}
+
+	fmt.Printf("action=%s result=%s\n", action, resp)
 
 	if err := json.Unmarshal(resp, result); err != nil {
 		return err
