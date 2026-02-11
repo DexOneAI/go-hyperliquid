@@ -138,7 +138,6 @@ func (e *Exchange) executeAction(ctx context.Context, action, result any) error 
 		e.client.baseURL == MainnetAPIURL,
 	)
 	if err != nil {
-		fmt.Println("sign l1 action err:", err)
 		return err
 	}
 

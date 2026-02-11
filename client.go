@@ -53,6 +53,8 @@ func (c *client) post(ctx context.Context, path string, payload any) ([]byte, er
 		return nil, fmt.Errorf("failed to marshal payload: %w", err)
 	}
 
+	fmt.Println(string(jsonData))
+
 	url := c.baseURL + path
 	req, err := http.NewRequestWithContext(
 		ctx,
