@@ -14,15 +14,19 @@ import (
 	"github.com/ethereum/go-ethereum/signer/core/apitypes"
 )
 
+type UpdateStatus struct {
+	Status string `json:"status"`
+}
+
 func (e *Exchange) UpdateLeverage(
 	ctx context.Context,
 	leverage int,
 	name string,
 	isCross bool,
-) (*UserState, error) {
+) error {
 	asset, ok := e.info.CoinToAsset(name)
 	if !ok {
-		return nil, fmt.Errorf("coin %s not found in info", name)
+		return fmt.Errorf("coin %s not found in info", name)
 	}
 
 	action := UpdateLeverageAction{
@@ -32,21 +36,26 @@ func (e *Exchange) UpdateLeverage(
 		Leverage: leverage,
 	}
 
-	var result UserState
+	var result *APIResponse[UpdateStatus]
 	if err := e.executeAction(ctx, action, &result); err != nil {
-		return nil, err
+		return err
 	}
-	return &result, nil
+
+	if result.Data.Status != "success" {
+		return fmt.Errorf("failed to update coin %s leverage", name)
+	}
+
+	return nil
 }
 
 func (e *Exchange) UpdateIsolatedMargin(
 	ctx context.Context,
 	amount float64,
 	name string,
-) (*UserState, error) {
+) error {
 	asset, ok := e.info.CoinToAsset(name)
 	if !ok {
-		return nil, fmt.Errorf("coin %s not found in info", name)
+		return fmt.Errorf("coin %s not found in info", name)
 	}
 
 	action := UpdateIsolatedMarginAction{
@@ -56,20 +65,25 @@ func (e *Exchange) UpdateIsolatedMargin(
 		Ntli:  abs(amount),
 	}
 
-	var result UserState
+	var result *APIResponse[UpdateStatus]
 	if err := e.executeAction(ctx, action, &result); err != nil {
-		return nil, err
+		return err
 	}
-	return &result, nil
+
+	if result.Data.Status != "success" {
+		return fmt.Errorf("failed to isolated coin %s margin", name)
+	}
+
+	return nil
 }
 
 func (e *Exchange) TopUpIsolatedOnlyMargin(
 	ctx context.Context,
 	name, leverage string,
-) (*UserState, error) {
+) error {
 	asset, ok := e.info.CoinToAsset(name)
 	if !ok {
-		return nil, fmt.Errorf("coin %s not found in info", name)
+		return fmt.Errorf("coin %s not found in info", name)
 	}
 
 	action := TopUpIsolatedOnlyMarginAction{
@@ -78,11 +92,16 @@ func (e *Exchange) TopUpIsolatedOnlyMargin(
 		Leverage: leverage,
 	}
 
-	var result UserState
+	var result *APIResponse[UpdateStatus]
 	if err := e.executeAction(ctx, action, &result); err != nil {
-		return nil, err
+		return err
 	}
-	return &result, nil
+
+	if result.Data.Status != "success" {
+		return fmt.Errorf("failed to up isolated coin %s margin", name)
+	}
+
+	return nil
 }
 
 // SlippagePrice calculates the slippage price for market orders
