@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math/big"
 	"sort"
@@ -41,6 +42,10 @@ func (e *Exchange) UpdateLeverage(
 		return err
 	}
 
+	if result.Err != "" {
+		return errors.New(result.Err)
+	}
+
 	if result.Data.Status != "success" {
 		return fmt.Errorf("failed to update coin %s leverage", name)
 	}
@@ -70,6 +75,10 @@ func (e *Exchange) UpdateIsolatedMargin(
 		return err
 	}
 
+	if result.Err != "" {
+		return errors.New(result.Err)
+	}
+
 	if result.Data.Status != "success" {
 		return fmt.Errorf("failed to isolated coin %s margin", name)
 	}
@@ -95,6 +104,10 @@ func (e *Exchange) TopUpIsolatedOnlyMargin(
 	var result *APIResponse[UpdateStatus]
 	if err := e.executeAction(ctx, action, &result); err != nil {
 		return err
+	}
+
+	if result.Err != "" {
+		return errors.New(result.Err)
 	}
 
 	if result.Data.Status != "success" {
