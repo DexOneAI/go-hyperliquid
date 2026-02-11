@@ -30,6 +30,13 @@ func abs(x float64) float64 {
 	return x
 }
 
+func absUint64(x uint64) uint64 {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
 // formatFloat formats a float64 to string with 6 decimal places.
 func formatFloat(f float64) string {
 	return fmt.Sprintf("%.6f", f)
