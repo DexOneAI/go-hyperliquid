@@ -74,6 +74,8 @@ func (e *Exchange) UpdateIsolatedMargin(
 		Ntli:  absUint64(amount),
 	}
 
+	fmt.Println(action.IsBuy, action.Ntli)
+
 	var result *APIResponse[UpdateStatus]
 	if err := e.executeAction(ctx, action, &result); err != nil {
 		return err
@@ -797,7 +799,7 @@ func (e *Exchange) WithdrawFromBridge(
 	ctx context.Context,
 	amount float64,
 	destination string,
-) (*TransferResponse, error) {
+) error {
 	nonce := e.nextNonce()
 
 	action := map[string]any{
@@ -823,19 +825,32 @@ func (e *Exchange) WithdrawFromBridge(
 		e.client.baseURL == MainnetAPIURL,
 	)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	resp, err := e.postAction(ctx, action, sig, nonce)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	var result TransferResponse
-	if err := json.Unmarshal(resp, &result); err != nil {
-		return nil, err
+	var result *APIResponse[UpdateStatus]
+	if err = json.Unmarshal(resp, &result); err != nil {
+		return err
 	}
-	return &result, nil
+
+	if result.Err != "" {
+		return errors.New(result.Err)
+	}
+
+	if result.Type == "default" {
+		return nil
+	}
+
+	if result.Data.Status != "success" {
+		return errors.New("failed to withdraw")
+	}
+
+	return nil
 }
 
 // ApproveAgent approves an agent to trade on behalf of the user
