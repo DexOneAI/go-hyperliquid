@@ -41,6 +41,20 @@ const (
 	StopLoss   Tpsl = "sl"
 )
 
+type UserNonFundingLedgerUpdatesType string
+
+const (
+	Deposit              UserNonFundingLedgerUpdatesType = "deposit"
+	Withdraw             UserNonFundingLedgerUpdatesType = "withdraw"
+	AccountClassTransfer UserNonFundingLedgerUpdatesType = "accountClassTransfer"
+	SpotTransfer         UserNonFundingLedgerUpdatesType = "spotTransfer"
+	spotGenesis          UserNonFundingLedgerUpdatesType = "spotGenesis"
+	subAccountTransfer   UserNonFundingLedgerUpdatesType = "subAccountTransfer"
+	internalTransfer     UserNonFundingLedgerUpdatesType = "internalTransfer"
+	liquidation          UserNonFundingLedgerUpdatesType = "liquidation"
+	cStakingTransfer     UserNonFundingLedgerUpdatesType = "cStakingTransfer"
+)
+
 type AssetInfo struct {
 	Name          string `json:"name"`
 	SzDecimals    int    `json:"szDecimals"`
@@ -670,4 +684,22 @@ type PerpDeployAuctionStatus struct {
 	StartGas         string  `json:"startGas"`
 	CurrentGas       string  `json:"currentGas"`
 	EndGas           *string `json:"endGas"`
+}
+
+type UserNonFundingLedgerUpdates struct {
+	Time  int64  `json:"time"`
+	Hash  string `json:"hash"`
+	Delta struct {
+		Type           UserNonFundingLedgerUpdatesType `json:"type"`
+		USDC           string                          `json:"usdc,omitempty"`
+		ToPerp         bool                            `json:"toPerp,omitempty"`
+		Token          string                          `json:"token,omitempty"`
+		Amount         string                          `json:"amount,omitempty"`
+		USDCValue      string                          `json:"usdcValue,omitempty"`
+		User           string                          `json:"user,omitempty"`
+		Destination    string                          `json:"destination,omitempty"`
+		Fee            string                          `json:"fee,omitempty"`
+		NativeTokenFee string                          `json:"nativeTokenFee,omitempty"`
+		Nonce          any                             `json:"nonce"`
+	} `json:"delta"`
 }

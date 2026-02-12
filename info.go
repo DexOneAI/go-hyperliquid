@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 const (
@@ -853,4 +854,25 @@ func (i *Info) PerpDeployAuctionStatus(ctx context.Context) (*PerpDeployAuctionS
 		return nil, fmt.Errorf("failed to unmarshal perp deploy auction status: %w", err)
 	}
 	return &result, nil
+}
+
+func (i *Info) UserNonFundingLedgerUpdates(ctx context.Context, address string, startTime, endTime time.Time) ([]UserNonFundingLedgerUpdates, error) {
+	payload := map[string]any{
+		"type":      "userNonFundingLedgerUpdates",
+		"user":      address,
+		"startTime": startTime.UnixMilli(),
+		"endTime":   endTime.UnixMilli(),
+	}
+
+	resp, err := i.client.post(ctx, "/info", payload)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch user non-funding ledger updates: %w", err)
+	}
+
+	var result []UserNonFundingLedgerUpdates
+	if err := json.Unmarshal(resp, &result); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal user non-funding ledger updates: %w", err)
+	}
+
+	return result, nil
 }

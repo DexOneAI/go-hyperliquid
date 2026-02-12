@@ -3,6 +3,7 @@ package hyperliquid
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
@@ -917,4 +918,20 @@ func TestPerpDexLimits_RequiresNonEmptyDex(t *testing.T) {
 	_, err := info.PerpDexLimits(context.TODO(), "")
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "dex parameter is required")
+}
+
+func TestInfo_UserNonFundingLedgerUpdates(t *testing.T) {
+	info := NewInfo(context.TODO(), MainnetAPIURL, true, nil, nil)
+
+	updates, err := info.UserNonFundingLedgerUpdates(
+		context.TODO(),
+		"",
+		time.Now().AddDate(-1, 0, 0),
+		time.Now(),
+	)
+	require.NoError(t, err)
+
+	for _, update := range updates {
+		t.Log(update)
+	}
 }
