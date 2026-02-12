@@ -809,6 +809,7 @@ func (e *Exchange) WithdrawFromBridge(
 		"signatureChainId": "0x66eee",
 	}
 
+	fmt.Println(action)
 	payloadTypes := []apitypes.Type{
 		{Name: "hyperliquidChain", Type: "string"},
 		{Name: "destination", Type: "string"},
