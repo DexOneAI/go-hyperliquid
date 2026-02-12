@@ -77,7 +77,7 @@ func newTestExchange(t *testing.T) *hyperliquid.Exchange {
 	// Initialize test exchange
 	return hyperliquid.NewExchange(
 		context.TODO(),
-		testPrivateKey,
+		hyperliquid.NewSignerPrimitive(testPrivateKey),
 		apiURL,
 		nil,
 		vaultAddr,

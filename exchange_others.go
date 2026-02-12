@@ -1816,3 +1816,50 @@ func (e *Exchange) MultiSig(
 	}
 	return &result, nil
 }
+
+func (e *Exchange) SetAbstractionMode(
+	ctx context.Context,
+	mode UserAbstractionMode,
+) error {
+	nonce := e.nextNonce()
+
+	action := map[string]any{
+		"type":             "userSetAbstraction",
+		"user":             e.accountAddr,
+		"abstraction":      mode,
+		"nonce":            nonce,
+		"signatureChainId": "0x66eee",
+	}
+
+	payloadTypes := []apitypes.Type{
+		{Name: "hyperliquidChain", Type: "string"},
+		{Name: "user", Type: "address"},
+		{Name: "abstraction", Type: "string"},
+		{Name: "nonce", Type: "uint64"},
+	}
+
+	sig, err := SignUserSignedAction(
+		ctx,
+		e.signer,
+		action,
+		payloadTypes,
+		"HyperliquidTransaction:UserSetAbstraction",
+		e.client.baseURL == MainnetAPIURL,
+	)
+
+	resp, err := e.postAction(ctx, action, sig, nonce)
+	if err != nil {
+		return err
+	}
+
+	var result *APIResponse[UpdateStatus]
+	if err = json.Unmarshal(resp, &result); err != nil {
+		return err
+	}
+
+	if result.Err != "" {
+		return errors.New(result.Err)
+	}
+
+	return nil
+}

@@ -870,8 +870,27 @@ func (i *Info) UserNonFundingLedgerUpdates(ctx context.Context, address string, 
 	}
 
 	var result []UserNonFundingLedgerUpdates
-	if err := json.Unmarshal(resp, &result); err != nil {
+	if err = json.Unmarshal(resp, &result); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal user non-funding ledger updates: %w", err)
+	}
+
+	return result, nil
+}
+
+func (i *Info) UserAbstraction(ctx context.Context, address string) (UserAbstractionMode, error) {
+	payload := map[string]any{
+		"type": "userAbstraction",
+		"user": address,
+	}
+
+	resp, err := i.client.post(ctx, "/info", payload)
+	if err != nil {
+		return "", fmt.Errorf("failed to fetch user abstraction mode: %w", err)
+	}
+
+	var result UserAbstractionMode
+	if err = json.Unmarshal(resp, &result); err != nil {
+		return "", fmt.Errorf("failed to unmarshal user abstraction mode: %w", err)
 	}
 
 	return result, nil

@@ -55,6 +55,14 @@ const (
 	cStakingTransfer     UserNonFundingLedgerUpdatesType = "cStakingTransfer"
 )
 
+type UserAbstractionMode string
+
+const (
+	Disabled       UserAbstractionMode = "disabled"
+	DexAbstraction UserAbstractionMode = "dexAbstraction"
+	UnifiedAccount UserAbstractionMode = "unifiedAccount"
+)
+
 type AssetInfo struct {
 	Name          string `json:"name"`
 	SzDecimals    int    `json:"szDecimals"`

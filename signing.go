@@ -268,7 +268,9 @@ func SignUserSignedAction(
 	// Add signatureChainId based on environment
 	// signatureChainId is the chain used by the wallet to sign.
 	// hyperliquidChain determines the environment and prevents replay attacks.
-	action["signatureChainId"] = "0xa4b1"
+	if _, found := action["signatureChainId"]; !found {
+		action["signatureChainId"] = "0xa4b1"
+	}
 	action["hyperliquidChain"] = "Mainnet"
 	if !isMainnet {
 		action["hyperliquidChain"] = "Testnet"
