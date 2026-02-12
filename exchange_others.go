@@ -71,7 +71,8 @@ func (e *Exchange) UpdateIsolatedMargin(
 		Type:  "updateIsolatedMargin",
 		Asset: asset,
 		IsBuy: amount > 0,
-		Ntli:  absInt64(amount),
+		//Ntli:  absInt64(amount),
+		Ntli: amount,
 	}
 
 	var result *APIResponse[UpdateStatus]
