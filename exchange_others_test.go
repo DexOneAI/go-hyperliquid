@@ -62,7 +62,7 @@ func TestPerpDeployHaltTrading(t *testing.T) {
 			Type:  "updateIsolatedMargin",
 			Asset: 5,
 			IsBuy: u64.Uint64() > 0,
-			Ntli:  absUint64(u64.Uint64()),
+			Ntli:  absInt64(u64.Int64()),
 		}
 
 		data, _ := json.Marshal(map[string]any{

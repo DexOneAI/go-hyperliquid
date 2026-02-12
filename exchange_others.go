@@ -59,7 +59,7 @@ func (e *Exchange) UpdateLeverage(
 
 func (e *Exchange) UpdateIsolatedMargin(
 	ctx context.Context,
-	amount uint64,
+	amount int64,
 	name string,
 ) error {
 	asset, ok := e.info.CoinToAsset(name)
@@ -71,10 +71,8 @@ func (e *Exchange) UpdateIsolatedMargin(
 		Type:  "updateIsolatedMargin",
 		Asset: asset,
 		IsBuy: amount > 0,
-		Ntli:  absUint64(amount),
+		Ntli:  absInt64(amount),
 	}
-
-	fmt.Println(action.IsBuy, action.Ntli)
 
 	var result *APIResponse[UpdateStatus]
 	if err := e.executeAction(ctx, action, &result); err != nil {

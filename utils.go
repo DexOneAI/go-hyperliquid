@@ -30,7 +30,7 @@ func abs(x float64) float64 {
 	return x
 }
 
-func absUint64(x uint64) uint64 {
+func absInt64(x int64) int64 {
 	if x < 0 {
 		return -x
 	}

@@ -111,7 +111,7 @@ type UpdateIsolatedMarginAction struct {
 	Type  string `json:"type"  msgpack:"type"`
 	Asset int    `json:"asset" msgpack:"asset"`
 	IsBuy bool   `json:"isBuy" msgpack:"isBuy"`
-	Ntli  uint64 `json:"ntli"  msgpack:"ntli"`
+	Ntli  int64  `json:"ntli"  msgpack:"ntli"`
 }
 
 type TopUpIsolatedOnlyMarginAction struct {
