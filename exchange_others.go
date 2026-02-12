@@ -802,10 +802,11 @@ func (e *Exchange) WithdrawFromBridge(
 	nonce := e.nextNonce()
 
 	action := map[string]any{
-		"destination": destination,
-		"amount":      formatFloat(amount),
-		"time":        big.NewInt(nonce),
-		"type":        "withdraw3",
+		"destination":      destination,
+		"amount":           formatFloat(amount),
+		"time":             big.NewInt(nonce),
+		"type":             "withdraw3",
+		"signatureChainId": "0x66eee",
 	}
 
 	payloadTypes := []apitypes.Type{
