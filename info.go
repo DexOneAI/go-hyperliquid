@@ -895,3 +895,23 @@ func (i *Info) UserAbstraction(ctx context.Context, address string) (UserAbstrac
 
 	return result, nil
 }
+
+func (i *Info) MaxBuilderFee(ctx context.Context, address, builder string) (int, error) {
+	payload := map[string]any{
+		"type":    "maxBuilderFee",
+		"user":    address,
+		"builder": builder,
+	}
+
+	resp, err := i.client.post(ctx, "/info", payload)
+	if err != nil {
+		return 0, fmt.Errorf("failed to fetch max builder fee: %w", err)
+	}
+
+	var result int
+	if err = json.Unmarshal(resp, &result); err != nil {
+		return 0, fmt.Errorf("failed to unmarshal max builder fee: %w", err)
+	}
+
+	return result, nil
+}

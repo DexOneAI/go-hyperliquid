@@ -926,7 +926,7 @@ func (e *Exchange) ApproveBuilderFee(
 	ctx context.Context,
 	builder string,
 	maxFeeRate string,
-) (*ApprovalResponse, error) {
+) error {
 	nonce := e.nextNonce()
 
 	action := map[string]any{
@@ -952,19 +952,24 @@ func (e *Exchange) ApproveBuilderFee(
 		e.client.baseURL == MainnetAPIURL,
 	)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	resp, err := e.postAction(ctx, action, sig, nonce)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	var result ApprovalResponse
-	if err := json.Unmarshal(resp, &result); err != nil {
-		return nil, err
+	var result *APIResponse[UpdateStatus]
+	if err = json.Unmarshal(resp, &result); err != nil {
+		return err
 	}
-	return &result, nil
+
+	if result.Err != "" {
+		return errors.New(result.Err)
+	}
+
+	return nil
 }
 
 // ConvertToMultiSigUser converts account to multi-signature user
