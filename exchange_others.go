@@ -930,10 +930,11 @@ func (e *Exchange) ApproveBuilderFee(
 	nonce := e.nextNonce()
 
 	action := map[string]any{
-		"maxFeeRate": maxFeeRate,
-		"builder":    strings.ToLower(builder),
-		"nonce":      big.NewInt(nonce),
-		"type":       "approveBuilderFee",
+		"maxFeeRate":       maxFeeRate,
+		"builder":          strings.ToLower(builder),
+		"nonce":            big.NewInt(nonce),
+		"type":             "approveBuilderFee",
+		"signatureChainId": "0x66eee",
 	}
 
 	payloadTypes := []apitypes.Type{
