@@ -1854,6 +1854,9 @@ func (e *Exchange) SetAbstractionMode(
 		"HyperliquidTransaction:UserSetAbstraction",
 		e.client.baseURL == MainnetAPIURL,
 	)
+	if err != nil {
+		return err
+	}
 
 	resp, err := e.postAction(ctx, action, sig, nonce)
 	if err != nil {
