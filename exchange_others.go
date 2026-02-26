@@ -1832,11 +1832,11 @@ func (e *Exchange) SetAbstractionMode(
 	nonce := e.nextNonce()
 
 	action := map[string]any{
-		"type":        "userSetAbstraction",
-		"user":        e.accountAddr,
-		"abstraction": string(mode),
-		"nonce":       nonce,
-		//"signatureChainId": "0x66eee",
+		"type":             "userSetAbstraction",
+		"user":             e.accountAddr,
+		"abstraction":      string(mode),
+		"nonce":            nonce,
+		"signatureChainId": "0x66eee",
 	}
 
 	payloadTypes := []apitypes.Type{
