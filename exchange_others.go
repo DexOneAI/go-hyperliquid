@@ -1834,7 +1834,7 @@ func (e *Exchange) SetAbstractionMode(
 	action := map[string]any{
 		"type":             "userSetAbstraction",
 		"user":             e.accountAddr,
-		"abstraction":      mode,
+		"abstraction":      string(mode),
 		"nonce":            nonce,
 		"signatureChainId": "0x66eee",
 	}
