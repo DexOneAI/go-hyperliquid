@@ -300,7 +300,7 @@ func SignUserSignedAction(
 	}
 
 	data, _ := json.MarshalIndent(typedData, "", "  ")
-	fmt.Println(data)
+	fmt.Println(string(data))
 
 	// signInner uses hashStructLenient which filters message to only include
 	// fields declared in payloadTypes, matching Python eth_account behavior
